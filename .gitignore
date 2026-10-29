@@ -1,0 +1,10 @@
+# OS & editor
+Thumbs.db
+desktop.ini
+.DS_Store
+__pycache__/
+*.pyc
+
+# arsip yang tidak perlu ikut repo
+*.zip
+og-unsplash-lama.jpg

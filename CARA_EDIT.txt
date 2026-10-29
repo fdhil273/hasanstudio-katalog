@@ -1,0 +1,122 @@
+CARA EDIT WEBSITE HASAN STUDIO
+================================
+
+STRUKTUR FILE
+-------------
+index.html        -> isi halaman + paket + FAQ (statis, biar kebaca Google & AI)
+data.js           -> profil, daftar foto galeri, testimoni, add-on
+script.js         -> logika (galeri, lightbox, form booking, kirim WA/JSON)
+style.css         -> font, scrollbar slider, aturan print
+logo_hasan_studio.svg -> logo (favicon + navbar + footer). NAMA FILE HARUS HURUF KECIL.
+og.jpg            -> gambar preview 1200x630 saat link dibagikan di WhatsApp/FB
+robots.txt        -> izin crawl untuk Google + crawler AI
+make_og.py        -> script pembuat ulang og.jpg (jalankan: python make_og.py)
+build_assets.py   -> resize + convert foto mentah jadi WebP, kompres video
+assets/foto/      -> 15 foto web (wedding-01..10, magazine-01..05, poster video)
+assets/video/     -> 2 video mp4
+
+
+1. UBAH PAKET / HARGA
+----------------------
+Harga di website berbentuk RENTANG (Rp 1.500.000 - Rp 3.500.000) dan tidak dihitung
+otomatis. Harga pasti disepakati lewat WhatsApp, bukan di website.
+
+Tempat yang menyebut angka:
+  a. index.html -> 5 kartu paket (cari "Rp 1,5 - 3,5 jt")
+  b. index.html -> header "Kisaran biaya Rp 1.500.000 - Rp 3.500.000"
+  c. index.html -> baris "Kisaran Biaya" di form (id="total-harga")
+  d. index.html -> JSON-LD <head> "priceRange": "Rp 1500000-3500000"
+  e. index.html -> FAQ "Berapa kisaran biaya jasa foto di Sidoarjo?"
+  f. script.js  -> ambilDataBooking(): "kisaranHarga"
+
+Daftar layanan di kartu dan di <select id="pilih-paket"> harus sama.
+Kalau menambah layanan, tambah di dua tempat itu dengan value id yang sama
+(contoh "paket-wedding"), karena tombol "Pilih Paket Ini" memakai id tersebut.
+
+Menu add-on (tambahan) ada di data.js -> daftarTambahan, isinya NAMA saja tanpa harga.
+
+
+1b. ALUR BOOKING (tanpa database)
+---------------------------------
+Form tidak menghitung total. Yang terjadi saat tombol ditekan:
+  - "Tanya Jadwal & Pesan via WhatsApp" -> buka WA berisi ringkasan teks + blok JSON
+  - "Salin Ringkasan JSON"              -> salin JSON ke clipboard, tempel manual di WA
+JSON berisi: sumber, waktuIsi, nama, layanan, tanggalAcara, jamMulai, lokasi,
+tambahan[], catatan, kisaranHarga, hargaPasti ("menunggu konfirmasi pemilik").
+Tidak ada data yang disimpan di server. Tidak ada yang tersimpan di browser juga.
+
+
+2. UBAH FOTO & VIDEO GALERI
+---------------------------
+Foto asli disimpan di  assets/foto/   (file .webp)
+Video ada di            assets/video/  (file .mp4)
+Sumber mentahnya di     E:/porto_hasanstudio
+
+CARA MENAMBAH FOTO BARU (paling gampang):
+  1. Taruh foto mentah di E:/porto_hasanstudio
+     - foto wedding  -> langsung di folder itu
+     - foto magazine -> di dalam subfolder "magzine"
+  2. Jalankan:  python build_assets.py
+     (butuh ffmpeg untuk video, sudah terpasang di laptop ini)
+  3. Buka data.js -> daftarPortofolio, tambah entri baru:
+        { judul: "Dokumentasi Wedding 11", kategori: "wedding",
+          ket: "Wedding", url: "assets/foto/wedding-11.webp" }
+
+KATEGORI yang dipakai tombol filter: "wedding", "magazine", "video".
+Kalau menambah kategori baru, tambah juga tombolnya di index.html (id="filter-buttons").
+
+ENTRI VIDEO pakai dua field:
+        { judul: "Video Dokumentasi 01", kategori: "video", ket: "Video",
+          url: "assets/foto/video-1-poster.jpg",
+          video: "assets/video/video-1.mp4" }
+Field "url" = gambar poster, "video" = file yang diputar di lightbox.
+
+Catatan: nama file wedding-01..10 / magazine-01..05 dibuat urut abjad nama file asli.
+Kalau mau judul lebih spesifik (misal "Akad di Ngaban"), ubah field "judul" di data.js.
+
+
+3. UBAH PROFIL / NOMOR WA / MAPS
+--------------------------------
+data.js -> profilFotografer.
+nomorWA pakai format 62xxx tanpa + dan tanpa 0 di depan (contoh: 6285257717309).
+
+
+4. UBAH TESTIMONI
+-----------------
+data.js -> komentarAwal. Ini data statis (tidak ada database, tidak ada form).
+Tombol "Beri Rating di Google Maps" mengarah ke listing Google Maps asli.
+
+
+5. LINK INSTAGRAM / FACEBOOK
+----------------------------
+index.html -> bagian <footer>, cari "instagram.com" dan "facebook.com".
+Juga ada di JSON-LD bagian "sameAs" (bagian <head>) untuk SEO.
+
+
+6. GANTI LOGO
+-------------
+Timpa file logo_hasan_studio.svg. JANGAN pakai huruf besar (Windows tidak peduli,
+tapi hosting Linux akan 404 kalau nama file beda kapitalisasi).
+
+
+7. GANTI GAMBAR PREVIEW WHATSAPP
+--------------------------------
+Timpa og.jpg dengan foto ukuran 1200x630 piksel.
+
+
+8. SETELAH PUNYA DOMAIN (belum dikerjakan)
+------------------------------------------
+Ganti DOMAIN-KAMU lalu hapus tanda komentar <!-- --> pada 3 baris di index.html bagian <head>:
+    <link rel="canonical" href="https://DOMAIN-KAMU/">
+    <meta property="og:url" content="https://DOMAIN-KAMU/">
+    <meta property="og:image" content="https://DOMAIN-KAMU/og.jpg">
+Lalu aktifkan baris Sitemap di robots.txt dan buat sitemap.xml.
+
+
+CATATAN PENTING
+---------------
+- Paket, harga, dan FAQ sengaja DIPINDAH dari data.js ke index.html.
+  Alasan: crawler AI (GPTBot, ClaudeBot, PerplexityBot) tidak menjalankan JavaScript,
+  jadi konten yang dirender JS tidak terbaca oleh mereka.
+- Yang masih dirender JS: galeri foto, add-on form, dan testimoni.
+  Itu tidak masalah karena bukan konten yang mau dikutip AI.

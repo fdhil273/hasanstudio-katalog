@@ -1,0 +1,47 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Sembunyikan scrollbar bawaan di slider tapi tetap bisa digeser halus */
+.slider-container {
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: thin;
+}
+
+.slider-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.slider-container::-webkit-scrollbar-track {
+    background: #f1f0ec;
+    border-radius: 8px;
+}
+
+.slider-container::-webkit-scrollbar-thumb {
+    background: #d6d3d1;
+    border-radius: 8px;
+}
+
+.foto-item {
+    transition: transform 0.2s ease;
+}
+
+.foto-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Pengaturan saat tombol Simpan PDF / Print diklik */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    body {
+        background: #ffffff !important;
+    }
+    #paket-slider {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        overflow: visible !important;
+    }
+}
